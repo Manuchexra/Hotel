@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "HotelOS PostgreSQL",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "hotelos",
+      "Username": "hotelos",
+      "Password": "hotelos_pass",
+      "SSLMode": "prefer",
+      "SavePassword": true
+    }
+  }
+}

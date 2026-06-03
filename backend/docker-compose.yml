@@ -1,0 +1,217 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - hotelos_net
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: hotelos
+      POSTGRES_PASSWORD: hotelos_pass
+      POSTGRES_DB: hotelos
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - hotelos_net
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    env_file:
+      - .env
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - hotelos_net
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  reception:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn services.reception.main:app --host 0.0.0.0 --port 8000
+    container_name: reception
+    ports:
+      - "8001:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - hotelos_net
+    restart: unless-stopped
+
+  housekeeping:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn services.housekeeping.main:app --host 0.0.0.0 --port 8000
+    container_name: housekeeping
+    ports:
+      - "8002:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - hotelos_net
+    restart: unless-stopped
+
+  roomservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn services.roomservice.main:app --host 0.0.0.0 --port 8000
+    container_name: roomservice
+    ports:
+      - "8003:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - hotelos_net
+    restart: unless-stopped
+
+  maintenance:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn services.maintenance.main:app --host 0.0.0.0 --port 8000
+    container_name: maintenance
+    ports:
+      - "8004:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - hotelos_net
+    restart: unless-stopped
+
+  billing:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn services.billing.main:app --host 0.0.0.0 --port 8000
+    container_name: billing
+    ports:
+      - "8005:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - hotelos_net
+    restart: unless-stopped
+
+  hr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn services.hr.main:app --host 0.0.0.0 --port 8000
+    container_name: hr
+    ports:
+      - "8006:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - hotelos_net
+    restart: unless-stopped
+
+  panel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn panel.main:app --host 0.0.0.0 --port 8000
+    container_name: panel
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - hotelos_net
+    restart: unless-stopped
+    volumes:
+      # users.json Docker volume orqali saqlanadi — restart bo'lganda yo'qolmaydi
+      - panel_data:/app/data
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3010:80"    # Staff paneli  → http://localhost:3010
+    depends_on:
+      - panel
+    networks:
+      - hotelos_net
+    restart: unless-stopped
+
+  guest-frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.guest
+    container_name: guest-frontend
+    ports:
+      - "3011:80"    # Guest paneli  → http://localhost:3011
+    depends_on:
+      - panel
+    networks:
+      - hotelos_net
+    restart: unless-stopped
+
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python -u common/seed.py
+    container_name: seed
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - reception
+      - housekeeping
+      - roomservice
+      - maintenance
+      - billing
+      - panel
+      - hr
+    networks:
+      - hotelos_net
+    restart: "no"
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  panel_data:
+
+networks:
+  hotelos_net:
+    driver: bridge

@@ -1,0 +1,125 @@
+/* Reception uslublari */
+.checkin-form, .billing-view {
+    max-width: 600px;
+    margin: 0 auto;
+}
+.form-row {
+    margin-bottom: 1rem;
+}
+.form-row label {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+.form-row input, .form-row select {
+    width: 100%;
+    padding: 0.5rem;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid var(--gold);
+    border-radius: 0.5rem;
+    color: var(--text-light);
+}
+.guests-table {
+    width: 100%;
+    overflow-x: auto;
+}
+.rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+}
+.room-card {
+    background: rgba(26,60,43,0.6);
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.2s;
+}
+.room-card.band { border-left: 4px solid var(--danger); }
+.room-card.toza { border-left: 4px solid var(--success); }
+.room-card.iflos { border-left: 4px solid var(--warning); }
+
+.room-management {
+    animation: fadeInUp 0.3s ease;
+}
+.rooms-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.rooms-table-wrapper {
+    overflow-x: auto;
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    padding: 0.5rem;
+    margin-bottom: 2rem;
+}
+.rooms-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.rooms-table th, .rooms-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--glass-border);
+    text-align: left;
+}
+.rooms-table th {
+    background: rgba(0,0,0,0.3);
+    color: var(--gold);
+}
+.status-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+.status-toza { background: #10b981; color: white; }
+.status-iflos { background: #f59e0b; color: black; }
+.status-tozalanmoqda { background: #3b82f6; color: white; }
+.status-texnik_xizmat { background: #6b7280; color: white; }
+.status-band { background: #ef4444; color: white; }
+
+.status-update-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    padding: 1rem;
+}
+.update-form {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 1rem;
+}
+.update-form .form-control {
+    padding: 0.5rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.5rem;
+    color: var(--text-light);
+}
+.update-form input {
+    width: 150px;
+}
+.update-form select {
+    width: 180px;
+}
+.action-message {
+    margin-top: 1rem;
+}
+.alert-success {
+    background: rgba(16,185,129,0.2);
+    border-left: 3px solid #10b981;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+.alert-error {
+    background: rgba(239,68,68,0.2);
+    border-left: 3px solid #ef4444;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}

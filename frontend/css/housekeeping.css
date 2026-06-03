@@ -1,0 +1,164 @@
+.housekeeping-dashboard {
+    animation: fadeInUp 0.3s ease;
+}
+.hk-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.hk-queue, .hk-actions, .hk-history {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+.queue-container ul, .history-container ul {
+    list-style: none;
+    padding: 0;
+}
+.queue-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+.status-pending {
+    color: var(--warning);
+}
+.action-form {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.action-form .form-control {
+    width: 150px;
+    padding: 0.5rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--gold);
+    border-radius: 0.5rem;
+    color: var(--text-light);
+}
+.alert-success {
+    background: rgba(16,185,129,0.2);
+    border-left: 3px solid #10b981;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+.alert-error {
+    background: rgba(239,68,68,0.2);
+    border-left: 3px solid #ef4444;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+.no-data {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 1rem;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tozalash tarixi sahifasi */
+.history-page {
+    animation: fadeInUp 0.3s ease;
+}
+.history-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.history-filters .search-input,
+.history-filters .filter-date {
+    padding: 0.5rem 1rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 2rem;
+    color: var(--text-light);
+}
+.history-list-wrapper {
+    overflow-x: auto;
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    padding: 0.5rem;
+}
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.history-table th, .history-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--glass-border);
+    text-align: left;
+}
+.history-table th {
+    background: rgba(0,0,0,0.3);
+    color: var(--gold);
+}
+.no-data, .error {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+}
+.error {
+    color: #ef4444;
+}
+
+/* Tozalash jadvali sahifasi */
+.schedule-page {
+    animation: fadeInUp 0.3s ease;
+}
+.schedule-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+.filter-date {
+    padding: 0.5rem 1rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 2rem;
+    color: var(--text-light);
+}
+.schedule-list-wrapper {
+    overflow-x: auto;
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    padding: 0.5rem;
+}
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.schedule-table th, .schedule-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--glass-border);
+    text-align: left;
+}
+.schedule-table th {
+    background: rgba(0,0,0,0.3);
+    color: var(--gold);
+}
+.priority-kritik { color: #ef4444; font-weight: bold; }
+.priority-yuqori { color: #f59e0b; }
+.priority-normal { color: #10b981; }
+.priority-past { color: var(--text-muted); }
+.no-data, .error {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+}
+.error {
+    color: #ef4444;
+}

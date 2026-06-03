@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mehmon Dashboard | HotelOS</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏨</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/guest.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo-section">
+                <h2>🏨 HotelOS</h2>
+                <p class="room-info">Xona: <span id="roomNumber">101</span></p>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#dashboard" class="nav-link active" data-page="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#menu" class="nav-link" data-page="menu"><i class="fas fa-utensils"></i> Ovqat Buyurtmasi</a></li>
+                <li><a href="#issues" class="nav-link" data-page="issues"><i class="fas fa-tools"></i> Muammo Haqida Xabar</a></li>
+                <li><a href="#bill" class="nav-link" data-page="bill"><i class="fas fa-receipt"></i> To'lov Qilish</a></li>
+                <li><a href="#checkout" class="nav-link" data-page="checkout"><i class="fas fa-sign-out-alt"></i> Chiqish</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <button class="logout-btn" data-action="logout"><i class="fas fa-power-off"></i> Chiqish</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-bar">
+                <h1>Mehmon Paneli</h1>
+                <div class="header-info">
+                    <span id="guestName">Mehmon</span>
+                    <span class="time" id="currentTime">00:00</span>
+                </div>
+            </header>
+
+            <!-- Dashboard Page -->
+            <section id="dashboard-page" class="page active">
+                <div class="page-header">
+                    <h2>Xush kelibsiz!</h2>
+                    <p id="welcomeMessage">Salom, <span id="welcomeName"></span>! 🎉</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Quick Stats -->
+                    <div class="card stats-card">
+                        <div class="stat-item">
+                            <i class="fas fa-door-open"></i>
+                            <div class="stat-info">
+                                <span class="stat-label">Xona Raqami</span>
+                                <span class="stat-value" id="statRoom">101</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <div class="stat-info">
+                                <span class="stat-label">Check-in</span>
+                                <span class="stat-value" id="statCheckin">2024-01-15</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-hourglass-end"></i>
+                            <div class="stat-info">
+                                <span class="stat-label">Check-out</span>
+                                <span class="stat-value" id="statCheckout">2024-01-17</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-dollar-sign"></i>
+                            <div class="stat-info">
+                                <span class="stat-label">Qoldiq</span>
+                                <span class="stat-value" id="statBalance">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <h3><i class="fas fa-lightning-bolt"></i> Tezkor Harakatlar</h3>
+                        <div class="action-grid">
+                            <button class="action-btn" onclick="switchPage('menu')">
+                                <i class="fas fa-utensils"></i>
+                                <span>Ovqat Buyurtmasi</span>
+                            </button>
+                            <button class="action-btn" onclick="switchPage('issues')">
+                                <i class="fas fa-tools"></i>
+                                <span>Muammo Haqida Xabar</span>
+                            </button>
+                            <button class="action-btn" onclick="switchPage('bill')">
+                                <i class="fas fa-receipt"></i>
+                                <span>To'lov Qilish</span>
+                            </button>
+                            <button class="action-btn" onclick="switchPage('checkout')">
+                                <i class="fas fa-door-open"></i>
+                                <span>Chiqish</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Important Info -->
+                    <div class="card">
+                        <h3><i class="fas fa-info-circle"></i> Muhim Ma'lumot</h3>
+                        <ul class="info-list">
+                            <li><strong>Check-out vaqti:</strong> 12:00 (tushdan oldin)</li>
+                            <li><strong>Recepsion:</strong> 24/7 ochiq (ext. 0)</li>
+                            <li><strong>Ovqat xizmati:</strong> 07:00 - 22:00 (kuniga 6 kun)</li>
+                            <li><strong>Daraje:</strong> Standart</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loader -->
+            <div class="loader-overlay" id="loader" style="display:none;">
+                <div class="spinner"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/utils.js"></script>
+    <script src="guest-auth.js"></script>
+    <script src="pages/dashboard.js"></script>
+    <script src="pages/menu.js"></script>
+    <script src="pages/issues.js"></script>
+    <script src="pages/bill.js"></script>
+    <script src="pages/checkout.js"></script>
+    <script>
+        // Sahifadagi yuklanadigan modullar
+        const PAGE_LOADERS = {
+            dashboard: () => DashboardPage && DashboardPage.load(),
+            menu:      () => typeof renderMenu === 'function' && renderMenu(),
+            issues:    () => IssuesPage && IssuesPage.load(),
+            bill:      () => BillPage && BillPage.load(),
+            checkout:  () => CheckoutPage && CheckoutPage.render(),
+        };
+
+        // Sahifa o'tkazish - dinamik sahifalar ham yaratiladi va yuklanadi
+        function switchPage(pageName) {
+            const validPages = Object.keys(PAGE_LOADERS);
+            if (!validPages.includes(pageName)) return;
+
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+            let pageEl = document.getElementById(pageName + '-page');
+            if (!pageEl) {
+                // Dinamik yaratilgan sahifalarni chaqiramiz (module o'zi yaratadi)
+                try { PAGE_LOADERS[pageName](); } catch(e) {}
+                pageEl = document.getElementById(pageName + '-page');
+            }
+            if (pageEl) pageEl.classList.add('active');
+
+            const navEl = document.querySelector(`[data-page="${pageName}"]`);
+            if (navEl) navEl.classList.add('active');
+
+            // Sahifa yuklanadi
+            try { PAGE_LOADERS[pageName](); } catch(e) { console.warn('Page load:', e); }
+
+            // Hashni yangilash (agar farqli bo'lsa)
+            if (window.location.hash !== '#' + pageName) {
+                history.replaceState(null, '', '#' + pageName);
+            }
+        }
+
+        // URL hash o'zgarganda sahifani almashtirish
+        window.addEventListener('hashchange', () => {
+            const page = window.location.hash.replace('#', '') || 'dashboard';
+            switchPage(page);
+        });
+
+        // Nav linklariga click handler qo'shamiz (href="#page" ishlamaydi avtomatik)
+        document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchPage(link.getAttribute('data-page'));
+            });
+        });
+
+        // Vaqtni yangilash
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent =
+                now.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Boshlang'ich qiymatlarni o'rnatish
+        window.addEventListener('load', () => {
+            if (!requireGuestLogin()) return;
+            const info = GuestAuth.getGuestInfo();
+            document.getElementById('roomNumber').textContent = info.room;
+            document.getElementById('guestName').textContent = info.name;
+            document.getElementById('welcomeName').textContent = info.name;
+            document.getElementById('statRoom').textContent = info.room;
+            setupLogoutButtons();
+
+            // Dashboard sahifasini yuklash
+            try { DashboardPage.load(); } catch(e) {}
+
+            // Agar hash bilan kirilgan bo'lsa, o'sha sahifaga o'tish
+            const initPage = window.location.hash.replace('#', '') || 'dashboard';
+            if (initPage !== 'dashboard') {
+                switchPage(initPage);
+            }
+        });
+    </script>
+</body>
+</html>

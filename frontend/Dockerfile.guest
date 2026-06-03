@@ -1,0 +1,10 @@
+FROM nginx:alpine
+
+RUN rm -rf /etc/nginx/conf.d
+
+COPY nginx.guest.conf /etc/nginx/nginx.conf
+
+# Guest paneli
+COPY guest/ /usr/share/nginx/html/
+
+EXPOSE 80

@@ -1,0 +1,383 @@
+/* hr.css – HR bo‘limi uchun maxsus uslublar */
+.hr-dashboard {
+    animation: fadeInUp 0.3s ease;
+}
+
+.hr-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.hr-stats .stat-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1.25rem;
+    padding: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.2s;
+}
+.hr-stats .stat-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--gold);
+}
+.hr-stats .stat-card i {
+    font-size: 2.2rem;
+    color: var(--gold);
+}
+.hr-stats .stat-card h3 {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+.hr-stats .stat-card p {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin: 0;
+}
+
+.charts-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.chart-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+}
+.chart-card h3 {
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.hr-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+.hr-card h3 {
+    color: var(--gold);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.salaries-table-wrapper {
+    overflow-x: auto;
+}
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.data-table th,
+.data-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--glass-border);
+    text-align: left;
+}
+.data-table th {
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--gold);
+    font-weight: 600;
+}
+.no-data {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 2rem;
+}
+
+/* Animatsiya */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobil moslashuv */
+@media (max-width: 768px) {
+    .hr-stats,
+    .charts-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* HR staff sahifasi uchun qo‘shimchalar */
+.hr-staff-page {
+    animation: fadeInUp 0.3s ease;
+}
+.hr-staff-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.hr-staff-header h2 {
+    margin: 0;
+}
+.staff-table-wrapper {
+    overflow-x: auto;
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    padding: 0.5rem;
+}
+.data-table th, .data-table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+.actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 0.25rem;
+    font-size: 1.1rem;
+    transition: 0.2s;
+}
+.actions button i {
+    pointer-events: none;
+}
+.actions button:first-child { color: var(--gold); }
+.actions button:last-child { color: var(--danger); }
+.status-active { color: #10b981; }
+.status-blocked { color: #ef4444; }
+
+/* HR staff sahifasi uchun maxsus uslublar */
+.hr-staff-page {
+    animation: fadeInUp 0.3s ease;
+}
+.staff-stats {
+    margin-bottom: 1.5rem;
+}
+.staff-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+.search-input, .filter-select {
+    padding: 0.5rem 1rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 2rem;
+    color: var(--text-light);
+    min-width: 200px;
+}
+.search-input:focus, .filter-select:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+.staff-table-wrapper {
+    overflow-x: auto;
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    padding: 0.5rem;
+}
+.staff-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.staff-table th, .staff-table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--glass-border);
+}
+.employee-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.employee-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--gold);
+    color: var(--dark-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+.employee-info strong {
+    display: block;
+}
+.employee-info small {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+.view-employee-btn {
+    background: transparent;
+    border: 1px solid var(--gold);
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    color: var(--gold);
+    transition: 0.2s;
+}
+.view-employee-btn:hover {
+    background: var(--gold);
+    color: var(--dark-green);
+}
+/* Modal kengaytirilgan */
+.modal-large {
+    max-width: 650px;
+    width: 90%;
+}
+.employee-detail-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 1rem;
+}
+.emp-avatar-large {
+    width: 64px;
+    height: 64px;
+    background: var(--gold);
+    color: var(--dark-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+.emp-header-info h3 {
+    margin: 0;
+}
+.detail-tabs {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--glass-border);
+    margin-bottom: 1rem;
+}
+.tab-btn {
+    background: transparent;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: 0.2s;
+}
+.tab-btn.active {
+    color: var(--gold);
+    border-bottom: 2px solid var(--gold);
+}
+.tab-content {
+    padding: 0.5rem 0;
+}
+.detail-row {
+    display: flex;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+.detail-row label {
+    width: 140px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+.detail-row span {
+    flex: 1;
+}
+
+/* Maoshlar sahifasi */
+.payroll-page {
+    animation: fadeInUp 0.3s ease;
+}
+.payroll-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+.payroll-card h3 {
+    color: var(--gold);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 0.5rem;
+}
+#calculateForm .form-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+#calculateForm .form-group {
+    flex: 1;
+    min-width: 150px;
+}
+#calculateForm label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+#calculateForm input, #calculateForm select {
+    width: 100%;
+    padding: 0.5rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.5rem;
+    color: var(--text-light);
+}
+.result-card {
+    margin-top: 1rem;
+    background: rgba(212,175,55,0.1);
+    border-left: 3px solid var(--gold);
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+.filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+.filters input {
+    flex: 1;
+    padding: 0.4rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.5rem;
+    color: var(--text-light);
+}
+.btn-gold-small {
+    background: var(--gold);
+    color: var(--dark-green);
+    border: none;
+    padding: 0.3rem 0.8rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+.salaries-table-wrapper {
+    overflow-x: auto;
+}
+.data-table th, .data-table td {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+}
