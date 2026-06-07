@@ -48,7 +48,7 @@ async def get_current_user_ws(websocket: WebSocket):
 
 @router.on_event("startup")
 async def startup_subscribe_notifications():
-    """Redis staff.notification kanalini tinglash va WebSocket orqali uzatish."""
+    """Redis kanallarini tinglash va WebSocket orqali uzatish."""
     global _notification_subscribed
     if _notification_subscribed:
         return
@@ -68,23 +68,33 @@ async def startup_subscribe_notifications():
                 manager.broadcast(payload), loop
             )
 
+    def on_staff_message(message: dict):
+        """Xususiy xabarni faqat qabul qiluvchiga yuborish."""
+        data = message.get("data", {})
+        recipient = data.get("to")
+        if recipient:
+            asyncio.run_coroutine_threadsafe(
+                manager.send_to_user(recipient, message), loop
+            )
+        else:
+            asyncio.run_coroutine_threadsafe(
+                manager.broadcast(message), loop
+            )
+
+    def on_staff_broadcast(message: dict):
+        """Hammaga bildirishnoma yuborish."""
+        asyncio.run_coroutine_threadsafe(
+            manager.broadcast(message), loop
+        )
+
     def on_cleaning_queue(message: dict):
         payload = {"channel": "cleaning.queue.updated", "data": message}
         asyncio.run_coroutine_threadsafe(
             manager.broadcast_to_role("housekeeping", payload), loop
         )
 
-    redis_client.subscribe("staff.notification", on_staff_notification)
-    redis_client.subscribe("cleaning.queue.updated", on_cleaning_queue)
-    redis_client.subscribe("billing.bill_updated", lambda m: asyncio.run_coroutine_threadsafe(
-        manager.broadcast({"channel": "billing.bill_updated", "data": m}), loop
-    ))
-    redis_client.subscribe("room.status.updated", lambda m: asyncio.run_coroutine_threadsafe(
-        manager.broadcast({"channel": "room.status.updated", "data": m}), loop
-    ))
-
     def on_issue_created(message: dict):
-        """Yangi muammo yaratilganda maintenance xodimlariga bildirishnoma yuborish."""
+        """Yangi muammo yaratilganda maintenance va receptionga bildirishnoma yuborish."""
         payload = {
             "channel": "issue.created",
             "data": {
@@ -95,8 +105,12 @@ async def startup_subscribe_notifications():
                 "role": "maintenance",
             }
         }
+        # Maintenance va Reception ko'rishi kerak
         asyncio.run_coroutine_threadsafe(
             manager.broadcast_to_role("maintenance", payload), loop
+        )
+        asyncio.run_coroutine_threadsafe(
+            manager.broadcast_to_role("reception", payload), loop
         )
 
     def on_issue_assigned(message: dict):
@@ -115,6 +129,16 @@ async def startup_subscribe_notifications():
             manager.broadcast_to_role("maintenance", payload), loop
         )
 
+    redis_client.subscribe("staff.notification", on_staff_notification)
+    redis_client.subscribe("staff.message", on_staff_message)
+    redis_client.subscribe("staff.broadcast", on_staff_broadcast)
+    redis_client.subscribe("cleaning.queue.updated", on_cleaning_queue)
+    redis_client.subscribe("billing.bill_updated", lambda m: asyncio.run_coroutine_threadsafe(
+        manager.broadcast({"channel": "billing.bill_updated", "data": m}), loop
+    ))
+    redis_client.subscribe("room.status.updated", lambda m: asyncio.run_coroutine_threadsafe(
+        manager.broadcast({"channel": "room.status.updated", "data": m}), loop
+    ))
     redis_client.subscribe("issue.created", on_issue_created)
     redis_client.subscribe("issue.assigned", on_issue_assigned)
 
@@ -131,11 +155,12 @@ async def websocket_panel(websocket: WebSocket):
                 payload = json.loads(raw)
             except json.JSONDecodeError:
                 continue
+            
+            # WebSocket orqali kelgan xabarlarni redis'ga yuborish (agar kerak bo'lsa)
             if payload.get("type") == "staff_message" and isinstance(payload.get("data"), dict):
-                await manager.broadcast({
-                    "channel": "staff.message",
-                    "data": payload["data"]
-                })
+                # Bu yerda legacy websocket chat logikasi bo'lishi mumkin
+                # Lekin biz hozir HTTP API orqali xabar yuboryapmiz
+                pass
     except Exception:
         manager.disconnect(websocket)
 

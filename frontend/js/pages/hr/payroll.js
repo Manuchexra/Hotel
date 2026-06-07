@@ -71,7 +71,7 @@ export default async function () {
         const container = document.getElementById('salariesList');
         container.innerHTML = '<div class="loader-container">Yuklanmoqda...</div>';
         try {
-            const data = await API.request('panel', '/admin/salaries');
+            const data = await API.request('hr', '/hr/salaries');
             allSalaries = data || [];
             filterSalaries();
         } catch (err) {
@@ -172,7 +172,7 @@ export default async function () {
                     tax: tax,
                     net_salary: net
                 };
-                await API.request('panel', '/admin/salary/calculate', {
+                await API.request('hr', '/hr/salaries/calculate', {
                     method: 'POST',
                     body: JSON.stringify(payload)
                 });

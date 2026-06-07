@@ -24,16 +24,6 @@ class RoomOut(BaseModel):
     class Config:
         from_attributes = True
 
-class GuestOut(BaseModel):
-    id: str
-    name: str
-    room_type: str
-    nights: int
-    room_id: Optional[int] = None
-
-    class Config:
-        from_attributes = True
-
 class RoomCreate(BaseModel):
     number: int
     floor: int
@@ -48,3 +38,13 @@ class RoomUpdate(BaseModel):
 # BUG FIX #3: Xona holatini yangilash uchun request body schemasi
 class RoomStatusUpdate(BaseModel):
     new_status: RoomStatus
+
+class GuestOut(BaseModel):
+    id: str
+    name: str
+    room_type: str
+    nights: int
+    room_id: Optional[int] = None
+
+    class Config:
+        from_attributes = True

@@ -1,0 +1,1 @@
+# HotelOS services package

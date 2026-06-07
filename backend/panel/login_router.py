@@ -72,6 +72,10 @@ class MessageCreateRequest(BaseModel):
     to: str
     text: str
 
+class BroadcastRequest(BaseModel):
+    text: str
+    level: str = "info"  # info, warning, error, success
+
 
 class PasswordChangeRequest(BaseModel):
     current_password: str
@@ -304,8 +308,45 @@ def send_message(req: MessageCreateRequest, current_user: dict = Depends(get_cur
         recipient_name=to_p.get("fullname", req.to),
         text=req.text,
     )
-    redis_client.publish("staff.message", message)
+    # Bildirishnoma sifatida yuborish
+    notification = {
+        "channel": "staff.message",
+        "data": {
+            **message,
+            "title": f"📩 Yangi xabar: {message['fromName']}",
+            "message": message["text"],
+            "level": "info"
+        }
+    }
+    redis_client.publish("staff.message", notification)
     return message
+
+
+@login_router.post(
+    "/admin/broadcast",
+    summary="Hammaga bildirishnoma yuborish (Role: manager)",
+)
+def broadcast_notification(req: BroadcastRequest, current_user: dict = Depends(get_current_user)):
+    if current_user["role"] != "manager":
+        raise HTTPException(status_code=403, detail="Role manager required")
+    
+    from_u = current_user["username"]
+    from_p = settings.user_profiles.get(from_u, {})
+    
+    notification = {
+        "channel": "staff.broadcast",
+        "data": {
+            "id": str(uuid4()),
+            "from": from_u,
+            "fromName": from_p.get("fullname", from_u),
+            "title": "📢 Umumiy Bildirishnoma",
+            "message": req.text,
+            "level": req.level,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+    }
+    redis_client.publish("staff.broadcast", notification)
+    return {"success": True, "notification": notification["data"]}
 
 
 @login_router.put(

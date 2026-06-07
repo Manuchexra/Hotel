@@ -1272,3 +1272,127 @@ body {
     .page { padding: 0; }
     .bill-container { box-shadow: none; border: 1px solid #000; }
 }
+
+/* ═══════════════════════════════════════
+   WI-FI CARD STYLES
+   ═══════════════════════════════════════ */
+.wifi-card {
+    background: linear-gradient(rgba(13, 31, 20, 0.85), rgba(13, 31, 20, 0.85)), url('../../assets/img/wifi-bg.png');
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+    color: white;
+}
+
+.wifi-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 45%, rgba(212, 160, 23, 0.1) 50%, transparent 55%);
+    animation: shine 8s infinite linear;
+    pointer-events: none;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-30%) translateY(-30%); }
+    100% { transform: translateX(30%) translateY(30%); }
+}
+
+.wifi-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.wifi-text h3 {
+    color: var(--gold-light) !important;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.wifi-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.wifi-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.wifi-item .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.wifi-item .value {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+}
+
+.wifi-item .value.password {
+    color: var(--gold-light);
+    letter-spacing: 0.5px;
+}
+
+.copy-wifi-btn {
+    background: var(--gold);
+    color: var(--green-darkest);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.copy-wifi-btn:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 160, 23, 0.3);
+}
+
+.wifi-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#wifi-qr-code {
+    width: 100px;
+    height: 100px;
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    color: var(--green-darkest);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.wifi-qr span {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.8);
+}
+

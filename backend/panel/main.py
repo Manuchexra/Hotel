@@ -25,49 +25,11 @@ from common.database import init_db
 
 redis_client = get_redis()
 
-_loop = None
-
-
-def redis_listener():
-    pubsub = redis_client.client.pubsub()
-    channels = [
-        "room.status.update",
-        "order.status.updated",
-        "issue.created",
-        "issue.resolved",
-        "billing.bill_updated",
-        "cleaning.queue.updated",
-        "staff.message",
-    ]
-    pubsub.subscribe(*channels)
-    for message in pubsub.listen():
-        if message["type"] == "message":
-            channel = message.get("channel")
-            if isinstance(channel, bytes):
-                try:
-                    channel = channel.decode()
-                except Exception:
-                    channel = str(channel)
-            if not isinstance(channel, str):
-                channel = str(channel)
-            try:
-                data = json.loads(message["data"])
-            except (json.JSONDecodeError, TypeError):
-                data = message["data"]
-            if _loop and _loop.is_running():
-                asyncio.run_coroutine_threadsafe(
-                    manager.broadcast({"channel": channel, "data": data}),
-                    _loop,
-                )
 
 
 @app.on_event("startup")
 async def startup_event():
-    global _loop
-    _loop = asyncio.get_event_loop()
     init_db()
-    thread = threading.Thread(target=redis_listener, daemon=True)
-    thread.start()
 
 
 @app.get("/health")

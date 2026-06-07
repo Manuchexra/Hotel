@@ -82,7 +82,7 @@
 
                     <!-- Quick Actions -->
                     <div class="card">
-                        <h3><i class="fas fa-lightning-bolt"></i> Tezkor Harakatlar</h3>
+                        <h3><i class="fas fa-bolt"></i> Tezkor Harakatlar</h3>
                         <div class="action-grid">
                             <button class="action-btn" onclick="switchPage('menu')">
                                 <i class="fas fa-utensils"></i>
@@ -100,6 +100,34 @@
                                 <i class="fas fa-door-open"></i>
                                 <span>Chiqish</span>
                             </button>
+                        </div>
+                    </div>
+
+                    <!-- Wi-Fi Info -->
+                    <div class="card wifi-card">
+                        <div class="wifi-content">
+                            <div class="wifi-text">
+                                <h3><i class="fas fa-wifi"></i> Bepul Wi-Fi</h3>
+                                <div class="wifi-details">
+                                    <div class="wifi-item">
+                                        <span class="label">Tarmoq (SSID):</span>
+                                        <span class="value">HotelOS_Premium_WiFi</span>
+                                    </div>
+                                    <div class="wifi-item">
+                                        <span class="label">Parol:</span>
+                                        <span class="value password" id="wifiPassword">hotel2024!</span>
+                                    </div>
+                                </div>
+                                <button class="copy-wifi-btn" id="copyWifiBtn">
+                                    <i class="fas fa-copy"></i> Parolni nusxalash
+                                </button>
+                            </div>
+                            <div class="wifi-qr">
+                                <div id="wifi-qr-code">
+                                    <i class="fas fa-qrcode"></i>
+                                </div>
+                                <span>Skaner qiling</span>
+                            </div>
                         </div>
                     </div>
 
@@ -200,6 +228,21 @@
             document.getElementById('welcomeName').textContent = info.name;
             document.getElementById('statRoom').textContent = info.room;
             setupLogoutButtons();
+            
+            // Wi-Fi parolini nusxalash
+            const copyBtn = document.getElementById('copyWifiBtn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', () => {
+                    const password = document.getElementById('wifiPassword').textContent;
+                    navigator.clipboard.writeText(password).then(() => {
+                        const originalText = copyBtn.innerHTML;
+                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Nusxalandi!';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = originalText;
+                        }, 2000);
+                    });
+                });
+            }
 
             // Dashboard sahifasini yuklash
             try { DashboardPage.load(); } catch(e) {}

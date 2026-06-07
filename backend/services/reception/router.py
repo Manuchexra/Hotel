@@ -4,7 +4,7 @@ from .schemas import CheckinRequest, CheckoutRequest, RoomOut, GuestOut, RoomCre
 from .service import (
     checkin, checkout, get_all_rooms, get_all_guests,
     get_room_by_number, get_guest_by_id, update_room_status,
-    create_room, update_room, delete_room
+    create_room, update_room, delete_room, find_best_room
 )
 from .dependencies import valid_room_number, valid_guest_id
 from common.rbac import require_role, get_current_user

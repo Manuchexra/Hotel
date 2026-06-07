@@ -116,9 +116,9 @@ function addSystemNotification(channel, data) {
         id: `sys_${Date.now()}_${Math.random()}`,
         type: 'system',
         channel: channel,
-        title: getTitleForChannel(channel),
-        message: formatSystemMessage(channel, data),
-        timestamp: new Date().toISOString(),
+        title: data.title || getTitleForChannel(channel),
+        message: data.message || formatSystemMessage(channel, data),
+        timestamp: data.timestamp || new Date().toISOString(),
         read: false
     };
     notifs.push(newNotif);
@@ -144,7 +144,9 @@ function formatSystemMessage(channel, data) {
         case 'guest.checked_in': return `Yangi mehmon ${data.guest_name} (xona ${data.room_id}) joylashtirildi`;
         case 'guest.checked_out': return `Mehmon ${data.guest_name} chiqarildi (xona ${data.room_id})`;
         case 'billing.bill_updated': return `Hisob yangilandi: ${data.guest_id} uchun yangi summa ${data.new_total}`;
-        default: return JSON.stringify(data);
+        case 'staff.broadcast': return data.message || 'Umumiy bildirishnoma';
+        case 'staff.message': return data.message || data.text || 'Yangi xabar';
+        default: return data.message || JSON.stringify(data);
     }
 }
 
@@ -159,7 +161,8 @@ function getTitleForChannel(channel) {
         'cleaning.queue.updated': '🧹 Tozalash navbati',
         'guest.checked_in': '🏨 Check-in',
         'guest.checked_out': '🚪 Check-out',
-        'billing.bill_updated': '💰 Hisob-kitob'
+        'billing.bill_updated': '💰 Hisob-kitob',
+        'staff.broadcast': '📢 Umumiy Bildirishnoma'
     };
     return titles[channel] || '📢 Bildirishnoma';
 }

@@ -29,78 +29,33 @@ function connectWebSocket(token) {
 
 function handleWebSocketMessage(data) {
     try {
-        // Shaxsiy xabar (staff.message)
-        if (data && data.channel === 'staff.message' && data.data) {
-            const currentUser = localStorage.getItem('hotel_user');
-            if (currentUser && data.data.to === currentUser) {
-                const stored = localStorage.getItem('hotel_notifications');
-                const notifications = stored ? JSON.parse(stored) : [];
-                const msg = data.data;
-                const timestamp = msg.timestamp || new Date().toISOString();
-                const newNotif = {
-                    id: Date.now(),
-                    channel: 'staff.message',
-                    message: (msg.fromName || msg.from) + ': ' + msg.text,
-                    timestamp,
-                    read: false
-                };
-                notifications.push(newNotif);
-                if (notifications.length > 100) notifications.shift();
-                localStorage.setItem('hotel_notifications', JSON.stringify(notifications));
-                Utils.showToast('Yangi xabar: ' + newNotif.message, 'info');
+        // Toast ko'rsatish va badge yangilash
+        if (data && data.data) {
+            const notif = data.data;
+            const level = notif.level || 'info';
+            const toastType = level === 'warning' ? 'warning' : 'info';
+
+            if (data.channel === 'staff.message') {
+                Utils.showToast('📩 ' + (notif.title || 'Yangi xabar'), 'info');
+            } else if (data.channel === 'staff.broadcast') {
+                Utils.showToast('📢 ' + (notif.title || 'Bildirishnoma') + ': ' + (notif.message || ''), notif.level || 'info');
+            } else if (data.channel === 'staff.notification') {
+                Utils.showToast('[!] ' + (notif.title || 'Bildirishnoma') + ': ' + (notif.message || ''), toastType);
+            } else if (data.channel === 'issue.created' || data.channel === 'issue.assigned') {
+                const title = notif.title || (data.channel === 'issue.created' ? '🔧 Yangi Muammo' : '👤 Muammo Tayinlandi');
+                Utils.showToast(title + ': ' + (notif.message || ''), toastType);
             }
         }
 
-        // Rol asosidagi bildirishnoma — checkout -> housekeeping, va boshqa voqealar
-        if (data && data.channel === 'staff.notification' && data.data) {
-            const notif = data.data;
-            const stored = localStorage.getItem('hotel_notifications');
-            const notifications = stored ? JSON.parse(stored) : [];
-            const newNotif = {
-                id: Date.now(),
-                channel: 'staff.notification',
-                title: notif.title || 'Bildirishnoma',
-                message: notif.message || '',
-                room_id: notif.room_id,
-                level: notif.level || 'info',
-                timestamp: new Date().toISOString(),
-                read: false
-            };
-            notifications.push(newNotif);
-            if (notifications.length > 100) notifications.shift();
-            localStorage.setItem('hotel_notifications', JSON.stringify(notifications));
+        // Badge yangilash — hotel_system_notifications kalit bilan o'qish
+        const stored = localStorage.getItem('hotel_system_notifications');
+        const sysNotifs = stored ? JSON.parse(stored) : [];
+        _updateNotificationBadge(sysNotifs.filter(function(n){ return !n.read; }).length);
 
-            const toastType = notif.level === 'warning' ? 'warning' : 'info';
-            Utils.showToast('[!] ' + newNotif.title + ': ' + newNotif.message, toastType);
-            _updateNotificationBadge(notifications.filter(function(n){ return !n.read; }).length);
-        }
-
-        // Xona muammosi bildirishnomalari (maintenance xodimlari uchun)
-        if (data && (data.channel === 'issue.created' || data.channel === 'issue.assigned') && data.data) {
-            const notif = data.data;
-            const stored = localStorage.getItem('hotel_notifications');
-            const notifications = stored ? JSON.parse(stored) : [];
-            const newNotif = {
-                id: Date.now(),
-                channel: data.channel,
-                title: notif.title || (data.channel === 'issue.created' ? '🔧 Yangi Muammo' : '👤 Muammo Tayinlandi'),
-                message: notif.message || '',
-                room_id: notif.room_id,
-                level: notif.level || 'info',
-                timestamp: new Date().toISOString(),
-                read: false
-            };
-            notifications.push(newNotif);
-            if (notifications.length > 100) notifications.shift();
-            localStorage.setItem('hotel_notifications', JSON.stringify(notifications));
-
-            const toastType = notif.level === 'warning' ? 'warning' : 'info';
-            Utils.showToast(newNotif.title + ': ' + newNotif.message, toastType);
-            _updateNotificationBadge(notifications.filter(function(n){ return !n.read; }).length);
-        }
     } catch (e) {}
 
-    // Xabarlarni tegishli page moduliga yuborish (ws-message event)
+    // Barcha sahifalar va notifications.js uchun ws-message event yuborish
+    // notifications.js bu eventni tutib hotel_system_notifications ga saqlaydi
     const event = new CustomEvent('ws-message', { detail: data });
     window.dispatchEvent(event);
 }

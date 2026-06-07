@@ -86,14 +86,10 @@ async function updateRoomStatus() {
         // Ammo frontendda WebSocket orqali xabar yuborish imkoniyatidan foydalanish mumkin?
         // Eng to‘g‘ri yo‘l – panel servisiga /admin/rooms/{id}/status endpoint yaratish.
         // Buning o‘rniga vaqtincha xatolik xabarini chiqarish:
-        if (typeof API.updateRoomStatus === 'function') {
-            await API.updateRoomStatus(roomNum, newStatus);
-            showMessage(msgDiv, `Xona ${roomNum} holati "${newStatus}" ga o‘zgartirildi`, 'success');
+        await API.updateRoomStatus(roomNum, newStatus);
+            showMessage(msgDiv, `Xona ${roomNum} holati "${newStatus}" ga o'zgartirildi`, 'success');
             await loadRooms();
             document.getElementById('roomNum').value = '';
-        } else {
-            showMessage(msgDiv, '⚠️ Xona holatini o‘zgartirish API’si hali mavjud emas. Backendga /reception/rooms/{id}/status endpoint qo‘shishingiz kerak.', 'error');
-        }
     } catch (err) {
         showMessage(msgDiv, `Xatolik: ${err.message}`, 'error');
     }

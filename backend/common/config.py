@@ -7,6 +7,12 @@ from .password_utils import hash_password
 load_dotenv()
 
 DEFAULT_SECRET_KEY = "your-secret-key-change-me"
+_WEAK_KEYS = {
+    DEFAULT_SECRET_KEY,
+    "your-secret-key-change-in-production-2026",
+    "secret",
+    "changeme",
+}
 
 
 class Settings:
@@ -51,10 +57,11 @@ class Settings:
         self._load_user_store()
 
     def _validate_secret_key(self):
-        if self.SECRET_KEY == DEFAULT_SECRET_KEY:
+        if self.SECRET_KEY in _WEAK_KEYS or len(self.SECRET_KEY) < 32:
             raise RuntimeError(
-                "SECRET_KEY o'rnatilmagan yoki default qiymatda. "
-                "Ishlab chiqarishdan oldin .env faylida kuchli SECRET_KEY belgilang."
+                "SECRET_KEY xavfsiz emas yoki default qiymatda. "
+                "Ishlab chiqarishdan oldin .env faylida kuchli SECRET_KEY belgilang "
+                "(kamida 32 belgi, `python -c \"import secrets; print(secrets.token_hex(32))\"`)"
             )
 
     def _build_users_from_env(self) -> dict:

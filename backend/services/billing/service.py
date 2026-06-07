@@ -32,8 +32,10 @@ def subscribe_to_events():
                 item = BillItem(description=f"Xona {room_id} - {nights} kecha", amount=total_room_cost, timestamp=time.time(), bill=bill)
                 bill.items.append(item)
                 bill.total = (bill.total or 0.0) + total_room_cost
+                new_total = bill.total
                 db.commit()
-            redis_client.publish("billing.bill_updated", {"guest_id": guest_id, "new_total": bill.total})
+                # Publish after commit but INSIDE the session block to avoid DetachedInstanceError
+                redis_client.publish("billing.bill_updated", {"guest_id": guest_id, "new_total": new_total})
 
     def on_order_completed(message: dict):
         guest_id = message.get("guest_id")
@@ -46,9 +48,11 @@ def subscribe_to_events():
                     for itm in items:
                         item = BillItem(description=f"Xona xizmati: {itm['name']}", amount=itm['price'], timestamp=time.time(), bill=bill)
                         bill.items.append(item)
+                    # BUG FIX: bill.total ni yangilash kerak, keyin new_total olish
                     bill.total = (bill.total or 0.0) + total_price
+                    new_total = bill.total
                     db.commit()
-                    redis_client.publish("billing.bill_updated", {"guest_id": guest_id, "new_total": bill.total})
+                    redis_client.publish("billing.bill_updated", {"guest_id": guest_id, "new_total": new_total})
                 else:
                     print(f"Bill not found for guest {guest_id}")
 
@@ -61,9 +65,11 @@ def subscribe_to_events():
                 if bill:
                     item = BillItem(description="Kech chiqish to‘lovi", amount=extra_charge, timestamp=time.time(), bill=bill)
                     bill.items.append(item)
+                    # BUG FIX: bill.total ni yangilash kerak
                     bill.total = (bill.total or 0.0) + extra_charge
+                    new_total = bill.total
                     db.commit()
-                    redis_client.publish("billing.bill_updated", {"guest_id": guest_id, "new_total": bill.total})
+                    redis_client.publish("billing.bill_updated", {"guest_id": guest_id, "new_total": new_total})
 
     def on_finalize_request(message: dict):
         guest_id = message.get("guest_id")
@@ -131,10 +137,12 @@ def add_manual_item(guest_id: str, description: str, amount: float) -> dict:
             return {"success": False, "message": "Hisob allaqachon yopilgan"}
         item = BillItem(description=description, amount=amount, timestamp=time.time(), bill=bill)
         bill.items.append(item)
+        # BUG FIX: bill.total ni yangilash kerak
         bill.total = (bill.total or 0.0) + amount
+        new_total = bill.total
         db.commit()
-        redis_client.publish("billing.bill_updated", {"guest_id": guest_id, "new_total": bill.total})
-        return {"success": True, "new_total": bill.total}
+        redis_client.publish("billing.bill_updated", {"guest_id": guest_id, "new_total": new_total})
+        return {"success": True, "new_total": new_total}
 
 
 def apply_discount(guest_id: str, discount_percent: float) -> dict:
@@ -159,15 +167,21 @@ def finalize_bill(guest_id: str) -> dict:
         if bill.is_closed:
             return {"success": False, "message": "Hisob allaqachon yopilgan"}
         final_total = (bill.total or 0.0) * (1 - (bill.discount_percent or 0.0) / 100)
+        # Capture values before commit to avoid DetachedInstanceError or lazy-loading issues
+        guest_name = bill.guest_name
+        room_id = bill.room_id
+        items_count = len(bill.items)
+        
         bill.is_closed = True
         bill.closed_at = time.time()
         db.commit()
+        
         redis_client.publish("billing.final_bill", {
             "guest_id": guest_id,
-            "guest_name": bill.guest_name,
-            "room_id": bill.room_id,
+            "guest_name": guest_name,
+            "room_id": room_id,
             "final_total": final_total,
-            "items_count": len(bill.items)
+            "items_count": items_count
         })
         return {"success": True, "final_total": final_total}
 
